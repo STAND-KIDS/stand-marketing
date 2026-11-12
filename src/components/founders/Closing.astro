@@ -7,7 +7,13 @@
 // as a CSS mask, same technique as the nav and manifesto.
 // Aug 25 (Proto B promoted): the general-interest email bar sits in the
 // footer, wordmark left / bar right, ruled sign-off row underneath.
+// Nov 2026: a Fine Print row under the sign-off for the policy pages
+// (the same pattern as forgemakerspace.com/terms). Links come from
+// src/data/fine-print.ts; drafts stay hidden until their page is published.
 import SubscribeBar from './SubscribeBar.astro';
+import { FINE_PRINT } from '@/data/fine-print';
+
+const finePrint = FINE_PRINT.filter((link) => link.published);
 ---
 
 <section class="fc-closing" aria-label="Sign up">
@@ -45,6 +51,20 @@ import SubscribeBar from './SubscribeBar.astro';
       </a>
     </div>
   </div>
+  {
+    finePrint.length > 0 && (
+      <nav class="fine-print" aria-labelledby="fine-print-label">
+        <h2 id="fine-print-label">Fine Print</h2>
+        <ul>
+          {finePrint.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )
+  }
 </section>
 
 <style>
@@ -175,6 +195,53 @@ import SubscribeBar from './SubscribeBar.astro';
     text-decoration-thickness: 2px;
   }
 
+  /* Fine Print — the quietest line in the footer: label + policy links on
+     the same content width and gutters as the sign-off row. */
+  .fine-print {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    width: 100%;
+    max-width: calc(1132px + 2 * 48px);
+    margin: calc(-1 * var(--space-2)) auto 0;
+    padding: 0 48px;
+  }
+
+  .fine-print h2 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 14px;
+    color: color-mix(in srgb, var(--stand-cream) 70%, transparent);
+  }
+
+  .fine-print ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fine-print a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 15px;
+    color: var(--stand-cream);
+    text-underline-offset: 3px;
+  }
+
+  .fine-print a:hover,
+  .fine-print a:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
   @media (max-width: 768px) {
     .fc-closing {
       padding: var(--space-5) var(--space-3) var(--space-2);
@@ -184,6 +251,17 @@ import SubscribeBar from './SubscribeBar.astro';
       flex-direction: column;
       gap: var(--space-1);
       padding: 0 20px;
+    }
+
+    .fine-print {
+      flex-direction: column;
+      gap: 0;
+      margin-top: 0;
+      padding: 0 20px;
+    }
+
+    .fine-print ul {
+      justify-content: center;
     }
   }
 </style>

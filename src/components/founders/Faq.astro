@@ -1,6 +1,17 @@
 ---
 // Parent FAQ — native <details>/<summary> accordion (zero JS, keyboard
 // accessible for free). Questions + answers per the Aug 24 web-copy doc.
+
+interface Props {
+  /** 1 when the FAQ is the whole page (/faq), so its title is the page's
+   *  h1; 2 (default) when it's a section of the homepage. Same look either
+   *  way — the class carries the style, not the tag. */
+  level?: 1 | 2;
+}
+
+const { level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
+
 const FAQS: { q: string; a: string[] }[] = [
   {
     q: 'Where is STAND?',
@@ -50,7 +61,7 @@ const FAQS: { q: string; a: string[] }[] = [
 ---
 
 <section class="fc-faq" id="faq" aria-labelledby="faq-title">
-  <h2 id="faq-title" class="headline-xl">FAQ</h2>
+  <Heading id="faq-title" class="headline-xl">FAQ</Heading>
 
   <div class="list">
     {

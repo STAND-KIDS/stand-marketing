@@ -3,7 +3,9 @@
 // "THE SECRET FORMULA?" section). Giant stacked centered headline, then
 // centered body paragraphs, then the updates CTA. Copy per JY, Aug 27:
 // the headline is the "A Modern Day Lemonade Stand" tagline.
-import SignupButton from './SignupButton.astro';
+// Nov 2026 (January launch copy): body rewritten; the "Sign up for updates"
+// CTA is gone — it led to the retired /enroll flow, and enrolling now lives
+// in the launch section right below. Email updates stay in the footer.
 ---
 
 <section class="fc-newspace" id="about" aria-labelledby="newspace-title">
@@ -12,23 +14,20 @@ import SignupButton from './SignupButton.astro';
     <span class="line chunk" style="--i: 1">Lemonade Stand</span>
   </h2>
 
-  {/* Copy per JY's Sep 1 website copy edit doc. */}
+  {/* January launch copy, Nov 2026. */}
   <div class="body">
     <p class="chunk" style="--i: 2">
-      Where kids build <strong>real businesses</strong> &mdash; and the
-      <strong>real-life skills</strong> that come with them.
+      A place where kids dream up an idea, <strong>build it for real</strong>,
+      and pick up the <strong>life skills</strong> that come with it.
     </p>
 
     <p class="chunk" style="--i: 3">
-      <strong>STAND</strong> is an <strong>IRL space</strong> for kids ages
-      8&ndash;13 to <strong>make, build, problem-solve, communicate</strong>,
-      and bring an idea to life. Entrepreneurship is the vehicle. Everything
-      they learn along the way is the point.
+      <strong>STAND</strong> is a <strong>real-life space</strong> for kids
+      ages 8 to 13 to <strong>make, build, solve problems, share their
+      ideas</strong>, and bring something of their own to life.
+      Entrepreneurship is the vehicle. Everything they learn along the way is
+      the point.
     </p>
-  </div>
-
-  <div class="cta chunk" style="--i: 4">
-    <SignupButton label="Sign up for updates" />
   </div>
 </section>
 

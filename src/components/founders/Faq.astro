@@ -1,56 +1,78 @@
 ---
 // Parent FAQ — native <details>/<summary> accordion (zero JS, keyboard
-// accessible for free). Questions + answers per the Aug 24 web-copy doc.
+// accessible for free). Copy: January launch homepage copy, Nov 2026.
+//
+// Answers are HTML strings (rendered with set:html) so a few can carry
+// links. That is only safe because every string here is written by us in
+// this file. Never feed visitor- or API-supplied text into this list.
+import { ENROLL_HREF } from '@/data/enroll';
+
+interface Props {
+  /** 1 when the FAQ is the whole page (/faq), so its title is the page's
+   *  h1; 2 (default) when it's a section of the homepage. Same look either
+   *  way — the class carries the style, not the tag. */
+  level?: 1 | 2;
+}
+
+const { level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
+
 const FAQS: { q: string; a: string[] }[] = [
   {
     q: 'Where is STAND?',
     a: [
-      'STAND is opening in West Los Angeles this fall. More details on our first space soon — and more cities to come. Sign up for updates.',
+      'Our first space is in Santa Monica, opening January 11, 2027. We’d love to bring STAND to more cities soon.',
     ],
   },
   {
     q: 'Who is STAND for?',
     a: [
-      'STAND is designed for kids ages 8–13 who want to make, build, and create alongside other kids. No business idea required.',
+      'Kids ages 8 to 13 who love to make, build, and create, and want to do it alongside other kids. They don’t need an idea to start. Finding one is part of the fun.',
     ],
   },
   {
     q: 'What can I expect?',
     a: [
-      'STAND is built to feel more like a studio and workshop than a classroom. Kids are making, testing, talking, solving problems, changing their minds, and building something that’s actually theirs.',
-      'Eight weeks of taking an idea and building it into a real business. Kids go from idea to brand, product, pricing, marketing, and a final presentation. Learning by doing every step of the way.',
+      'It feels more like a workshop than a classroom. Lots of making, testing, and changing their minds, all while building something that’s truly theirs.',
+      'Over eight weeks, they take an idea from first spark to brand, product, pricing, marketing, and a final pitch.',
     ],
   },
   {
     q: 'What will my kid leave with?',
     a: [
-      'An idea they built out themselves, and a stronger sense that they can figure things out on their own. They’ll also leave with their brand, business plan, and a STAND login so they can keep working on their idea.',
+      'Something they built themselves, and the confidence that they can figure things out on their own. They’ll also take home their brand and business plan.',
     ],
   },
   {
     q: 'What kinds of skills will they learn?',
     a: [
       'Entrepreneurship is the vehicle. Everything they learn along the way is the point.',
-      'Along the way, kids practice creativity, communication, money, problem-solving, decision-making, resilience, and how to take an idea into the real world.',
+      'Creativity, talking about their ideas, handling money, making decisions, and sticking with something when it gets hard.',
     ],
   },
   {
     q: 'Who teaches STAND?',
     a: [
-      'People who know what it means to build something in the real world. STAND brings together entrepreneurs, makers, creatives, and mentors to help kids build their own thing.',
+      'People who know what it means to build something real. STAND brings together entrepreneurs, makers, creatives, and mentors to help kids build their own thing.',
     ],
   },
   {
     q: 'When does it start?',
     a: [
-      'Our first Los Angeles cohorts launch this fall. Sign up to be the first to hear about dates, enrollment, and our new space.',
+      `Our first cohorts start January 11, 2027. <a href="${ENROLL_HREF}">Enroll now</a> to save your child’s spot. We’d love to meet them.`,
+    ],
+  },
+  {
+    q: 'What is the cancellation policy?',
+    a: [
+      'Plans change, and we get it. Our <a href="/cancellation-policy">Cancellation and Refund Policy</a> has all the details.',
     ],
   },
 ];
 ---
 
 <section class="fc-faq" id="faq" aria-labelledby="faq-title">
-  <h2 id="faq-title" class="headline-xl">FAQ</h2>
+  <Heading id="faq-title" class="headline-xl">FAQ</Heading>
 
   <div class="list">
     {
@@ -62,7 +84,7 @@ const FAQS: { q: string; a: string[] }[] = [
           </summary>
           <div class="desc">
             {a.map((para) => (
-              <p>{para}</p>
+              <p set:html={para} />
             ))}
           </div>
         </details>
@@ -149,6 +171,20 @@ const FAQS: { q: string; a: string[] }[] = [
 
   details .desc p {
     margin: 0;
+  }
+
+  /* set:html content doesn't carry Astro's scope class, hence :global. The
+     global reset strips underlines; answer links need them back. */
+  details .desc :global(a) {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  details .desc :global(a:hover),
+  details .desc :global(a:focus-visible) {
+    color: var(--stand-red);
+    text-decoration-thickness: 2px;
   }
 
   details .desc p + p {

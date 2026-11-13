@@ -1,65 +1,55 @@
 ---
-// Location — shared (A/B/C): "week-by-week, scannable" (comp 1E, Aug 24). Heavy
-// sans announcement + red lede + CTA in the left rail; right column runs the
-// eight-week intro over a rule, the week table with red week labels, the
-// mentorship paragraph, and the learn-by-doing closer.
+// Location — the launch section: heavy announcement + lede + CTA in the
+// left rail; the eight-week story runs down the right column.
 // Chunks use the page-level data-rv reveal (armed by the index script).
+//
+// Nov 2026 (January launch copy): Santa Monica, opening Jan 11, 2027. The
+// week-by-week table is gone — the new copy tells the eight weeks as one
+// paragraph. Both CTAs are "Enroll now" to Sawyer (ENROLL_HREF); the second
+// sits at the end of the story so a reader who just finished it doesn't have
+// to scroll back up to the rail.
 import SignupButton from './SignupButton.astro';
-
-// Copy per JY's Sep 1 website copy edit doc.
-const WEEKS = [
-  { label: 'Week 1–2', text: 'Find the idea.' },
-  { label: 'Week 3–7', text: 'Create it. Design it. Build it.' },
-  { label: 'Week 8', text: 'Share what you made.' },
-];
+import { ENROLL_HREF } from '@/data/enroll';
 ---
 
 <section class="fc-location" id="location" aria-labelledby="location-title">
   <div class="grid">
     <header class="rail">
       <h2 id="location-title" data-rv style="--rvi: 0">
-        STAND is coming to Los&nbsp;Angeles!
+        STAND is opening in Santa&nbsp;Monica!
       </h2>
       <p class="lede" data-rv style="--rvi: 1">
-        Our first location opens this fall in&nbsp;LA!
+        We&rsquo;re so excited to open the doors to our very first space on
+        January&nbsp;11,&nbsp;2027.
       </p>
       <div class="cta" data-rv style="--rvi: 2">
-        <SignupButton label="Get first access" />
+        <SignupButton label="Enroll now" href={ENROLL_HREF} />
       </div>
     </header>
 
     <div class="detail">
       <p class="intro" data-rv style="--rvi: 3">
-        For eight weeks, kids ages 8 to 13 take an idea and build it into
-        something real.
+        Over eight weeks, kids ages 8 to 13 come up with an idea they care
+        about, then design it, create it, and turn it into something real.
       </p>
 
-      <dl class="weeks" data-rv style="--rvi: 4">
-        <div class="rows">
-          {
-            WEEKS.map((w) => (
-              <div class="week">
-                <dt>{w.label}</dt>
-                <dd>{w.text}</dd>
-              </div>
-            ))
-          }
-        </div>
-      </dl>
+      <p class="para" data-rv style="--rvi: 4">
+        At the end, they share what they made at Pitch Night, a showcase in
+        front of family and friends.
+      </p>
 
       <p class="para" data-rv style="--rvi: 5">
-        The eight weeks culminate in Pitch Night, where kids get up and
-        present the business they built.
+        Along the way, they get hands-on mentorship, make new friends, and
+        build alongside other kids.
       </p>
 
       <p class="para" data-rv style="--rvi: 6">
-        Along the way, they get hands-on mentorship and build alongside
-        other kids.
-      </p>
-
-      <p class="para" data-rv style="--rvi: 7">
         Because some things you only learn by doing.
       </p>
+
+      <div class="cta cta-end" data-rv style="--rvi: 7">
+        <SignupButton label="Enroll now" href={ENROLL_HREF} />
+      </div>
     </div>
   </div>
 </section>
@@ -110,9 +100,13 @@ const WEEKS = [
     color: var(--stand-black);
   }
 
-    .cta :global(.signup) {
+  .cta :global(.signup) {
     min-width: 0;
     align-self: flex-start;
+  }
+
+  .cta-end {
+    margin-top: clamp(28px, 3vw, 44px);
   }
 
   .detail {
@@ -126,61 +120,6 @@ const WEEKS = [
     font-family: var(--font-sans);
     font-weight: 400;
     font-size: clamp(17px, 1.8vw, 24px);
-    line-height: 1.4;
-    letter-spacing: -0.01em;
-    text-wrap: pretty;
-  }
-
-  /* Receipt-dash rules above and below the week table — fine 6px dashes
-     (the ProgramFacts recipe; border: dashed can't control dash length). */
-  .weeks {
-    margin: clamp(18px, 2vw, 28px) 0 0;
-    padding: clamp(18px, 2vw, 28px) 0;
-    --dash: repeating-linear-gradient(
-      to right,
-      var(--stand-black) 0 6px,
-      transparent 6px 11px
-    );
-    background-image: var(--dash), var(--dash);
-    background-repeat: no-repeat;
-    background-position:
-      left top,
-      left bottom;
-    background-size: 100% 0.5px;
-  }
-
-  /* The row block centers within the ruled box; the text inside keeps its
-     left justification. fit-content + auto margins do the centering. */
-  .weeks .rows {
-    width: fit-content;
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(8px, 1vw, 14px);
-  }
-
-  .week {
-    display: grid;
-    grid-template-columns: clamp(84px, 8vw, 110px) auto;
-    gap: clamp(10px, 1.2vw, 18px);
-    align-items: baseline;
-  }
-
-  dt {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: clamp(12px, 1.1vw, 15px);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--stand-red);
-  }
-
-  dd {
-    margin: 0;
-    max-width: 34ch;
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: clamp(15px, 1.4vw, 19px);
     line-height: 1.4;
     letter-spacing: -0.01em;
     text-wrap: pretty;

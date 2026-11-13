@@ -1,0 +1,164 @@
+---
+// Policy page shell — the Fine Print pages (Cancellation Policy, Family
+// Handbook, and whatever joins them). A plain reading column between the
+// site's own nav and red closing footer, so a parent who lands here from a
+// checkout or an email link still sees the real site around the text.
+//
+// Type: Pie Pie title (the same display face as the homepage FAQ headline),
+// Editorial New for the date line, Authentic Sans for everything a parent
+// actually reads. Page content goes in the slot as plain h2 / p / ul.
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/founders/Nav.astro';
+import Closing from '@/components/founders/Closing.astro';
+
+interface Props {
+  /** Browser tab + share title. */
+  title: string;
+  description: string;
+  /** The on-page title. */
+  heading: string;
+  /** ISO date (YYYY-MM-DD) the copy was last changed. */
+  updated: string;
+}
+
+const { title, description, heading, updated } = Astro.props;
+
+// Shown as "November 2, 2026". timeZone UTC: a bare ISO date parses as UTC
+// midnight, and formatting it in a US zone would print the day before.
+const updatedLabel = new Date(updated).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Layout title={title} description={description}>
+  <main class="founders-page">
+    <Nav
+      tabs={[
+        { label: 'Home', href: '/' },
+        { label: 'About', href: '/about' },
+      ]}
+    />
+
+    {/* data-nav-cream: the nav flips to its red state over cream grounds. */}
+    <article class="policy" data-nav-cream>
+      <header class="policy-head">
+        <h1>{heading}</h1>
+        <p class="updated">Last updated <time datetime={updated}>{updatedLabel}</time></p>
+      </header>
+      <div class="policy-body">
+        <slot />
+      </div>
+    </article>
+
+    <Closing />
+  </main>
+</Layout>
+
+<style>
+  .policy {
+    width: 100%;
+    max-width: calc(680px + 2 * 48px);
+    margin: 0 auto;
+    /* Clear the fixed nav, then breathe. */
+    padding: calc(var(--header-h) + var(--space-7)) 48px var(--space-8);
+  }
+
+  .policy-head {
+    margin-bottom: var(--space-6);
+  }
+
+  h1 {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.04;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+  }
+
+  .updated {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: 18px;
+  }
+
+  /* Slot content is rendered by the page, so these rules need :global to
+     reach it (Astro scopes styles to this file's own markup). */
+  .policy-body :global(h2) {
+    margin: var(--space-5) 0 var(--space-1);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .policy-body :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .policy-body :global(p),
+  .policy-body :global(li) {
+    font-size: 18px;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .policy-body :global(p) {
+    margin: 0 0 var(--space-2);
+  }
+
+  .policy-body :global(ul) {
+    margin: 0 0 var(--space-2);
+    padding-left: 1.2em;
+  }
+
+  .policy-body :global(li + li) {
+    margin-top: var(--space-1);
+  }
+
+  .policy-body :global(li::marker) {
+    color: var(--stand-red);
+  }
+
+  /* The global reset strips link underlines; body links need them back. */
+  .policy-body :global(a) {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .policy-body :global(a:hover),
+  .policy-body :global(a:focus-visible) {
+    color: var(--stand-red);
+    text-decoration-thickness: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .policy {
+      padding: calc(var(--header-h) + var(--space-5)) 20px var(--space-6);
+    }
+
+    .policy-head {
+      margin-bottom: var(--space-5);
+    }
+
+    .updated {
+      font-size: 16px;
+    }
+
+    .policy-body :global(h2) {
+      font-size: 21px;
+      margin-top: var(--space-4);
+    }
+
+    .policy-body :global(p),
+    .policy-body :global(li) {
+      font-size: 17px;
+    }
+  }
+</style>

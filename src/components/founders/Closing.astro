@@ -7,7 +7,44 @@
 // as a CSS mask, same technique as the nav and manifesto.
 // Aug 25 (Proto B promoted): the general-interest email bar sits in the
 // footer, wordmark left / bar right, ruled sign-off row underneath.
+// Nov 2026: the sign-off row became labelled link columns (Explore /
+// Contact / Fine Print), modelled on forgemakerspace.com's footer. Fine
+// Print reads src/data/fine-print.ts; drafts stay hidden until published.
 import SubscribeBar from './SubscribeBar.astro';
+import { FINE_PRINT } from '@/data/fine-print';
+
+interface FooterColumn {
+  label: string;
+  links: { label: string; href: string }[];
+}
+
+// Each column is just data; the grid below lays out however many there are.
+// A column whose links are all unpublished drops out instead of showing an
+// empty heading.
+const columns: FooterColumn[] = [
+  {
+    label: 'Explore',
+    // About lives here on purpose: Nav.astro hides its tabs below 1024px, so
+    // on phones and tablets this is the only route to /about.
+    links: [
+      { label: 'Home', href: '/' },
+      { label: 'About', href: '/about' },
+      { label: 'FAQ', href: '/faq' },
+    ],
+  },
+  {
+    label: 'Contact',
+    links: [
+      { label: 'hello@standkids.com', href: 'mailto:hello@standkids.com' },
+      { label: 'Instagram', href: 'https://www.instagram.com/buildwithstand' },
+      { label: 'TikTok', href: 'https://www.tiktok.com/@buildwithstand' },
+    ],
+  },
+  {
+    label: 'Fine Print',
+    links: FINE_PRINT.filter((link) => link.published),
+  },
+].filter((col) => col.links.length > 0);
 ---
 
 <section class="fc-closing" aria-label="Sign up">
@@ -17,34 +54,25 @@ import SubscribeBar from './SubscribeBar.astro';
       <SubscribeBar />
     </div>
   </div>
-  <!-- Bottom line: full-bleed rule (JY, Aug 25), then contact left /
-       socials right on the same grid as the capture row. -->
+  <!-- Full-bleed rule (JY, Aug 25), then the link columns on the same
+       content width and gutters as the capture row above. -->
   <hr class="rule" aria-hidden="true" />
-  <div class="foot" data-rv style="--rvi: 2">
-    <a class="email" href="mailto:hello@standkids.com">hello@standkids.com</a>
-    <!-- The only route to /about below 1024px. Nav.astro hides its tab list
-         there and is the site's sole other link to the page, so without this
-         row the About page is live but unreachable on every phone and tablet. -->
-    <nav class="pages" aria-label="Pages">
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/faq">FAQ</a>
-    </nav>
-    <div class="social">
-      <a href="https://www.instagram.com/buildwithstand" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="2" y="2" width="20" height="20" rx="5"></rect>
-          <circle cx="12" cy="12" r="4"></circle>
-          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
-        </svg>
-      </a>
-      <a href="https://www.tiktok.com/@buildwithstand" aria-label="TikTok">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-          <path d="M16 3v3a4 4 0 0 0 4 4v3a7 7 0 0 1-4-1.3V16a5 5 0 1 1-5-5v3a2 2 0 1 0 2 2V3h3z"></path>
-        </svg>
-      </a>
-    </div>
-  </div>
+  <nav class="link-cols" aria-label="Footer" data-rv style="--rvi: 2">
+    {
+      columns.map((col, i) => (
+        <div class="link-col">
+          <h2 id={`footer-col-${i}`}>{col.label}</h2>
+          <ul aria-labelledby={`footer-col-${i}`}>
+            {col.links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </nav>
 </section>
 
 <style>
@@ -113,64 +141,49 @@ import SubscribeBar from './SubscribeBar.astro';
     border-top: 1px solid color-mix(in srgb, var(--stand-cream) 35%, transparent);
   }
 
-  /* The sign-off row: contact left, socials right — same content width and
-     gutters as the capture row above. */
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  /* Link columns (Forge-style). auto-fit + minmax lets the grid choose
+     its own column count from the space it has: three across on desktop,
+     two on a tablet, and no media query needed to get there. Empty tracks
+     collapse, so three columns always share the full width. */
+  .link-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4) 32px;
     width: 100%;
     max-width: calc(1132px + 2 * 48px);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: var(--space-2) 48px var(--space-3);
+    text-align: left;
   }
 
-  /* Cream marks; 24px glyphs padded to 44px targets. */
-  .social {
-    display: flex;
-    gap: 16px;
+  .link-col h2 {
+    margin: 0 0 var(--space-1);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 15px;
+    color: color-mix(in srgb, var(--stand-cream) 65%, transparent);
   }
 
-  .social a {
-    display: grid;
-    place-items: center;
-    min-width: 44px;
-    min-height: 44px;
-    color: var(--stand-cream);
+  .link-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .email {
-    font-family: var(--font-serif);
-    font-weight: 300;
-    font-size: 16px;
-    color: var(--stand-cream);
-    text-underline-offset: 3px;
-  }
-
-  .email:hover {
-    text-decoration-thickness: 2px;
-  }
-
-  /* Same voice as .email, same 44px targets as .social. */
-  .pages {
-    display: flex;
-    gap: 24px;
-  }
-
-  .pages a {
+  /* 44px rows double as tap targets. */
+  .link-col a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font-family: var(--font-serif);
-    font-weight: 300;
-    font-size: 16px;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 19px;
     color: var(--stand-cream);
-    text-decoration: none;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
   }
 
-  .pages a:hover,
-  .pages a:focus-visible {
+  .link-col a:hover,
+  .link-col a:focus-visible {
     text-decoration: underline;
     text-decoration-thickness: 2px;
   }
@@ -180,10 +193,17 @@ import SubscribeBar from './SubscribeBar.astro';
       padding: var(--space-5) var(--space-3) var(--space-2);
     }
 
-    .foot {
-      flex-direction: column;
-      gap: var(--space-1);
-      padding: 0 20px;
+    .link-cols {
+      padding-inline: 20px;
+    }
+  }
+
+  /* Phones: one column, centered under the centered wordmark and bar. */
+  @media (max-width: 600px) {
+    .link-cols {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      text-align: center;
     }
   }
 </style>

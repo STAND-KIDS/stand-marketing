@@ -20,6 +20,7 @@ import Layout from '@/layouts/Layout.astro';
 import VideoHero from '@/components/founders/VideoHero.astro';
 import NewSpace from '@/components/founders/NewSpace.astro';
 import Location from '@/components/founders/Location.astro';
+import WhyStand from '@/components/founders/WhyStand.astro';
 import KidMoment from '@/components/founders/KidMoment.astro';
 import WalkAway from '@/components/founders/WalkAway.astro';
 import Testimonials from '@/components/founders/Testimonials.astro';
@@ -30,8 +31,8 @@ import Marquee from '@/components/Marquee.astro';
 ---
 
 <Layout
-  title="Stand — Build your own thing. For Real."
-  description="An 8-week in-person program in LA where kids 8–13 take an idea and build it into a real business — a brand, a product, a plan, and a pitch night. The modern day lemonade stand."
+  title="Stand — Build your own thing. For real."
+  description="An eight-week, in-person program in Santa Monica where kids 8–13 dream up an idea and build it for real. Opening January 11, 2027. A modern day lemonade stand."
 >
   <main class="founders-page">
     <VideoHero />
@@ -39,6 +40,9 @@ import Marquee from '@/components/Marquee.astro';
     <Marquee />
     <KidMoment />
     <Location />
+    {/* Why STAND — green statement band (Nov 2026 January copy), after the
+        launch section and before What families are saying. */}
+    <WhyStand />
     {/* Testimonials — the mustard stage, C from the Sep 3 review. Sits in the
         cream Location → green WalkAway seam as a new color beat. */}
     <Testimonials />

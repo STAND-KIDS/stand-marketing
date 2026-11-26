@@ -8,8 +8,8 @@
 // Aug 25 (Proto B promoted): the general-interest email bar sits in the
 // footer, wordmark left / bar right, ruled sign-off row underneath.
 // Nov 2026: the sign-off row became labelled link columns (Explore /
-// Contact / Fine Print), modelled on forgemakerspace.com's footer. Fine
-// Print reads src/data/fine-print.ts; drafts stay hidden until published.
+// Contact / For Family), modelled on forgemakerspace.com's footer. The
+// For Family column reads src/data/fine-print.ts; drafts stay hidden until published.
 import SubscribeBar from './SubscribeBar.astro';
 import { FINE_PRINT } from '@/data/fine-print';
 
@@ -41,7 +41,7 @@ const columns: FooterColumn[] = [
     ],
   },
   {
-    label: 'Fine Print',
+    label: 'For Family',
     links: FINE_PRINT.filter((link) => link.published),
   },
 ].filter((col) => col.links.length > 0);

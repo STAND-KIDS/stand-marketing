@@ -1,187 +1,52 @@
 ---
-// STAND Family Guide (Nov 26 2026 brief + final copy). Unlisted: not in the
-// nav, not in the footer, and noindex, so STAND shares it by link only
-// (enrollment emails, Sawyer). See FINE_PRINT in src/data/fine-print.ts to
-// list it under the footer's Fine Print column later.
+// STAND Family Guide (Nov 26 2026 brief). Unlisted: not in the nav, not in
+// the footer, and noindex, so STAND shares it by link only (enrollment
+// emails, Sawyer). To list it in the footer's For Family column later, see
+// FINE_PRINT in src/data/fine-print.ts.
 //
 // /family-handbook redirects here (vercel.json), since the first brief
 // called it the Family Handbook.
 //
-// Copy is verbatim from the brief, with two deliberate changes:
-//   - Phone: the brief says to use Lauren's urgent number for now, so
-//     URGENT_PHONE replaces the 310 number in the copy. When the space has
-//     its own STAND number, change it here (it appears twice on the page).
-//   - "Read the full Cancellation and Refund Policy" links to the live page,
-//     not the Google Doc.
+// Copy lives in src/data/family-guide.ts (shared with the design protos at
+// /proto/family-guide-b and -c). This page only decides how it looks.
 import PolicyPage from '@/layouts/PolicyPage.astro';
-
-const URGENT_PHONE = { label: '646-522-9433', tel: 'tel:+16465229433' };
-const EMAIL = 'hello@standkids.com';
+import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
 ---
 
 <PolicyPage
   title="Family Guide | STAND"
   description="Everything STAND families need before the first session: drop-off and pickup, what to bring, how we work together, health and safety, and tuition."
-  heading="STAND Family Guide"
+  heading={GUIDE_TITLE}
   noindex
 >
-  <h2>Welcome</h2>
-  <p>Welcome to STAND! I’m so excited for your kids to join us and see what they create.</p>
-  <p>
-    This guide covers everything you need to know before getting started, from drop-off and
-    pickup to what to bring and how we work together. If you have any questions, just email us
-    at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
-  </p>
-  <p>
-    <strong>Lauren Kassan</strong><br />
-    Founder &amp; CEO
-  </p>
-
-  <h2>What STAND Is</h2>
-  <p>
-    STAND is the modern-day lemonade stand. Entrepreneurship is the vehicle, but what kids learn
-    along the way is what matters most.
-  </p>
-  <p>
-    Over eight weeks, kids ages 8–13 take an idea and turn it into something real. They’ll learn
-    to think for themselves, make decisions, work with others, solve problems, and figure things
-    out as they go.
-  </p>
-  <p>
-    We wrap up with Pitch Night, where every kid gets to share what they’ve built with family,
-    friends, and guests.
-  </p>
-
-  <h2>Before the First Session</h2>
-  <p>
-    Please complete your child’s profile in Sawyer, including allergies and medical needs,
-    emergency contacts, and the names of all adults authorized to pick them up. You’ll also need
-    to sign the waiver and choose your photo preferences.
-  </p>
-  <p>The remaining tuition balance is charged 14 days before the first session.</p>
-
-  <h2>Drop-Off and Pickup</h2>
-  <p>STAND is a drop-off program. Please walk your child in and check in with a team member.</p>
-  <p>
-    Only adults on your pickup list can collect your child. We’ll check their ID the first time
-    we meet them. If someone else needs to pick up your child for a particular session, email us
-    ahead of time.
-  </p>
-  <p>
-    All kids must leave with an authorized adult. No one can leave alone, walk home, or take a
-    rideshare, regardless of age.
-  </p>
-  <p>
-    Running late? Call <a href={URGENT_PHONE.tel}>{URGENT_PHONE.label}</a> so we can let your
-    child know.
-  </p>
-  <p>
-    After a 10-minute grace period, late pickups cost $1 per minute. This helps cover the cost of
-    having a team member stay with your child until you arrive.
-  </p>
-
-  <h2>What to Bring</h2>
-  <p>
-    A water bottle and a willingness to try things! We’ll provide all the materials kids need to
-    create their projects.
-  </p>
-  <p>
-    Please leave valuables at home. Personal devices aren’t allowed during sessions and should
-    stay in backpacks.
-  </p>
-
-  <h2>How We Work at STAND</h2>
-  <p>Five values guide everything we do at STAND.</p>
-  <ul>
-    <li><strong>Say What You Think.</strong> Speak up. Give honest feedback, and be kind about it.</li>
-    <li><strong>Make Something Real.</strong> An idea becomes something more when you bring it to life.</li>
-    <li><strong>Figure It Out.</strong> Get stuck, try again, and ask for help when you need it.</li>
-    <li><strong>Build With Other People.</strong> Your cohort is your team. Make something better together.</li>
-    <li><strong>Own It.</strong> Take responsibility for your work, your mistakes, and your wins.</li>
-  </ul>
-
-  <h2>What We Ask of Parents</h2>
-  <p>
-    <strong>Let your kid take the lead.</strong> Cheer them on, ask questions, and give them room
-    to figure things out on their own. The messy parts are often where the best learning happens.
-  </p>
-  <p>
-    <strong>Join us for Pitch Night.</strong> It’s a chance to celebrate what the kids have
-    created and everything they’ve learned along the way.
-  </p>
-  <p>
-    <strong>If something doesn’t feel right, tell us early.</strong> We want every kid to feel
-    comfortable, supported, and excited to be here.
-  </p>
-
-  <h2>When Things Go Sideways</h2>
-  <p>
-    Sometimes things don’t go as planned. When they don’t, we’ll work through it together.
-  </p>
-  <ul>
-    <li>A team member will step in and help redirect things in the moment.</li>
-    <li>If needed, we’ll have a one-on-one conversation with your child.</li>
-    <li>If the issue continues, we’ll talk with you about what’s going on.</li>
-    <li>
-      If someone’s safety is at risk, we’ll ask you to pick up your child that day. Repeated
-      safety issues may mean ending their enrollment.
-    </li>
-  </ul>
-  <p>
-    Bullying, harassment, and physical aggression aren’t tolerated at STAND. These behaviors may
-    result in removal from the program, with no refund.
-  </p>
-
-  <h2>Health and Safety</h2>
-  <p>
-    Every session has two adults: a lead instructor running the room and a team member supporting
-    check-in, pickup, and anything the kids need. Everyone who works with our kids must pass a
-    fingerprint background check.
-  </p>
-  <p>
-    Please keep your child home if they’ve had a fever, been vomiting, or had a contagious illness
-    within the past 24 hours.
-  </p>
-  <p>
-    We don’t administer medication except for an EpiPen or inhaler you provide, with a signed
-    form.
-  </p>
-  <p>In an emergency, we’ll call 911 first, then contact you.</p>
-
-  <h2>Photos</h2>
-  <p>
-    When you enroll, you’ll choose whether we’re allowed to share your child’s photos and work on
-    STAND’s channels. We use first names only and never identify a child’s school.
-  </p>
-  <p>
-    If we want to share something with the press, we’ll ask your permission separately each time.
-    You can change your photo preferences at any point by emailing us.
-  </p>
-
-  <h2>Tuition and Refunds</h2>
-  <p>
-    A $100 deposit holds your child’s spot and goes toward tuition. The remaining balance is
-    charged 14 days before the first session.
-  </p>
-  <p>
-    If you cancel more than 14 days before the first session, you won’t be charged the remaining
-    balance. Cancellations within 14 days are non-refundable, and we can’t offer refunds once the
-    program begins.
-  </p>
-  <p>
-    If your plans change, you can move to a future STAND cohort, as long as a seat is available.
-    We don’t refund or make up missed sessions, but we’ll send you a recap of what your child
-    missed.
-  </p>
-  <p>
-    Read the full <a href="/cancellation-policy">Cancellation and Refund Policy</a>.
-  </p>
-
-  <h2>Communication</h2>
-  <p>We’ll send a weekly email with an update on what the kids have been working on and creating.</p>
-  <p>
-    Have a question? Email <a href={`mailto:${EMAIL}`}>{EMAIL}</a>, and we’ll get back to you
-    within one business day. If you need to reach us urgently during a session, call
-    <a href={URGENT_PHONE.tel}>{URGENT_PHONE.label}</a>.
-  </p>
+  {
+    GUIDE.map((section) => (
+      <>
+        <h2 id={section.id}>{section.title}</h2>
+        {section.blocks.map((block) =>
+          block.kind === 'p' ? (
+            <p>
+              {block.lead && <strong>{block.lead} </strong>}
+              <Fragment set:html={block.html} />
+            </p>
+          ) : block.kind === 'list' ? (
+            <ul>
+              {block.items.map((item) => (
+                <li>
+                  {item.lead && <strong>{item.lead} </strong>}
+                  <Fragment set:html={item.html} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              <strong>{block.name}</strong>
+              <br />
+              {block.role}
+            </p>
+          ),
+        )}
+      </>
+    ))
+  }
 </PolicyPage>

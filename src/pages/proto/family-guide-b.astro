@@ -12,11 +12,9 @@ import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
 // statement line. Cream everywhere with one green band for the values (JY,
 // Nov 26: no object illustrations, far fewer colour bands). The red nav and
 // red footer already carry the brand colour.
-// `callout` sets that statement on the paper-tag sticker (JY, Nov 26).
-// Welcome stays plain: it's a letter, signed by Lauren.
-const LOOK: Record<string, { ground: string; statement?: boolean; callout?: boolean }> = {
+const LOOK: Record<string, { ground: string; statement?: boolean }> = {
   welcome: { ground: 'cream', statement: true },
-  'what-stand-is': { ground: 'cream', statement: true, callout: true },
+  'what-stand-is': { ground: 'cream', statement: true },
   values: { ground: 'green' },
 };
 ---
@@ -52,7 +50,7 @@ const LOOK: Record<string, { ground: string; statement?: boolean; callout?: bool
               <div class="body">
                 {section.blocks.map((block, i) =>
                   block.kind === 'p' ? (
-                    <p class:list={[{ statement: look.statement && i === firstP, callout: look.callout && i === firstP }]} data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                    <p class:list={[{ statement: look.statement && i === firstP }]} data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
                       {block.lead && <strong>{block.lead} </strong>}
                       <Fragment set:html={block.html} />
                     </p>
@@ -180,36 +178,6 @@ const LOOK: Record<string, { ground: string; statement?: boolean; callout?: bool
     font-size: clamp(26px, 2.5vw, 36px);
     line-height: 1.18;
     letter-spacing: -0.01em;
-  }
-
-  /* Callout: the site's paper-tag sticker (SignupButton.astro), same
-     values: white face, 2px black border, hard 5px offset shadow, -5deg
-     skew. The sticker is a ::before layer so the skew stays off the serif
-     type. On desktop it bleeds out by its padding so the text keeps the
-     body's left edge; on phones it sits inside the gutter, leaving room
-     for the skew and shadow. */
-  .fg .body .callout {
-    --pad-x: clamp(20px, 2.6vw, 40px);
-    position: relative;
-    isolation: isolate;
-    padding: clamp(20px, 2.4vw, 36px) var(--pad-x);
-    margin-inline: calc(-1 * var(--pad-x));
-    color: var(--stand-black);
-  }
-  .fg .body .callout::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--stand-white);
-    border: 2px solid var(--stand-black);
-    box-shadow: 5px 5px 0 var(--stand-black);
-    transform: skewX(-5deg);
-  }
-  @media (max-width: 768px) {
-    .fg .body .callout {
-      margin-inline: 4px 10px;
-    }
   }
 
   .fg .body ul {

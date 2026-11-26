@@ -176,8 +176,9 @@ const LOOK: Record<string, { ground: string; statement?: boolean; callout?: bool
   .fg .body .statement {
     font-family: var(--font-serif);
     font-weight: 300;
-    /* Homepage Editorial line size (Testimonials quote). */
-    font-size: clamp(26px, 3.2vw, 48px);
+    /* 36px on a laptop (JY, Nov 26: the testimonial-quote size, 46px at
+       1440, read too big here). Phones stay at 26px. */
+    font-size: clamp(26px, 2.5vw, 36px);
     line-height: 1.18;
     letter-spacing: -0.01em;
   }

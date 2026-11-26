@@ -1,6 +1,6 @@
 ---
-// Policy page shell — the Fine Print pages (Cancellation Policy, Family
-// Handbook, and whatever joins them). A plain reading column between the
+// Policy page shell — the site's plain text pages (Cancellation Policy,
+// Family Guide, and whatever joins them). A plain reading column between the
 // site's own nav and red closing footer, so a parent who lands here from a
 // checkout or an email link still sees the real site around the text.
 //
@@ -17,23 +17,29 @@ interface Props {
   description: string;
   /** The on-page title. */
   heading: string;
-  /** ISO date (YYYY-MM-DD) the copy was last changed. */
-  updated: string;
+  /** ISO date (YYYY-MM-DD) the copy was last changed. Policies show it;
+   *  pages whose copy has no date line (the Family Guide) leave it out. */
+  updated?: string;
+  /** Keep the page out of search results. For unlisted pages that are
+   *  shared by link only. */
+  noindex?: boolean;
 }
 
-const { title, description, heading, updated } = Astro.props;
+const { title, description, heading, updated, noindex = false } = Astro.props;
 
 // Shown as "November 2, 2026". timeZone UTC: a bare ISO date parses as UTC
 // midnight, and formatting it in a US zone would print the day before.
-const updatedLabel = new Date(updated).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  timeZone: 'UTC',
-});
+const updatedLabel = updated
+  ? new Date(updated).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+  : null;
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} noindex={noindex}>
   <main class="founders-page">
     <Nav
       tabs={[
@@ -46,7 +52,9 @@ const updatedLabel = new Date(updated).toLocaleDateString('en-US', {
     <article class="policy" data-nav-cream>
       <header class="policy-head">
         <h1>{heading}</h1>
-        <p class="updated">Last updated <time datetime={updated}>{updatedLabel}</time></p>
+        {updatedLabel && (
+          <p class="updated">Last updated <time datetime={updated}>{updatedLabel}</time></p>
+        )}
       </header>
       <div class="policy-body">
         <slot />

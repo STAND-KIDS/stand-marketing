@@ -18,9 +18,7 @@ export interface FinePrintLink {
 
 export const FINE_PRINT: FinePrintLink[] = [
   { label: 'Cancellation Policy', href: '/cancellation-policy', published: true },
-  // Live at /family-guide but deliberately NOT in the footer (Nov 26 brief:
-  // "keep it out of navigation and the footer so we can share the link as
-  // needed"). To list it under For Family, flip this to true and drop
-  // `noindex` in src/pages/family-guide.astro.
-  { label: 'Family Guide', href: '/family-guide', published: false },
+  // The page is titled "STAND Family Guide"; the footer calls it the
+  // Family Handbook (JY, Nov 26).
+  { label: 'Family Handbook', href: '/family-guide', published: true },
 ];

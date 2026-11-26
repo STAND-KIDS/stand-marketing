@@ -1,25 +1,46 @@
 ---
-// Proto B — Family Guide in the homepage's own design language: full-bleed
-// brand-ground bands, Pie Pie headlines, Editorial New statement lines,
-// data-rv chunk reveals, Nav + Closing chrome. Copy comes only from
-// src/data/family-guide.ts.
+// GuidePage — the design for the site's long-form family pages (Family
+// Guide, Cancellation and Refund Policy). Promoted from Family Guide proto B
+// (JY, Nov 26): the homepage's own design language — Pie Pie section titles
+// beside a reading column, the homepage type scale, Editorial New statement
+// lines, the homepage's data-rv chunk reveals and Lenis scroll, Nav + Closing.
+//
+// Pages pass content as data (src/data/guide-types.ts), never markup, so
+// every page in this family looks the same and copy lives in src/data/.
 import Layout from '@/layouts/Layout.astro';
 import Nav from '@/components/founders/Nav.astro';
 import Closing from '@/components/founders/Closing.astro';
-import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
+import type { GuideSection, SectionLook } from '@/data/guide-types';
 
-// Per-section ground + whether the first paragraph is set as a big serif
-// statement line. Cream everywhere with one green band for the values (JY,
-// Nov 26: no object illustrations, far fewer colour bands). The red nav and
-// red footer already carry the brand colour.
-const LOOK: Record<string, { ground: string; statement?: boolean }> = {
-  welcome: { ground: 'cream', statement: true },
-  'what-stand-is': { ground: 'cream', statement: true },
-  values: { ground: 'green' },
-};
+interface Props {
+  /** Browser tab + share title. */
+  title: string;
+  description: string;
+  /** The on-page title (h1). */
+  heading: string;
+  sections: GuideSection[];
+  /** Per-section ground / statement styling, keyed by section id. */
+  looks?: Record<string, SectionLook>;
+  /** ISO date (YYYY-MM-DD) the copy last changed; shown under the title. */
+  updated?: string;
+  noindex?: boolean;
+}
+
+const { title, description, heading, sections, looks = {}, updated, noindex = false } = Astro.props;
+
+// Shown as "November 2, 2026". timeZone UTC: a bare ISO date parses as UTC
+// midnight, and formatting it in a US zone would print the day before.
+const updatedLabel = updated
+  ? new Date(updated).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+  : null;
 ---
 
-<Layout title="Proto B — Family Guide | STAND" noindex>
+<Layout title={title} description={description} noindex={noindex}>
   <main class="founders-page fg">
     <Nav
       tabs={[
@@ -29,12 +50,15 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     />
 
     <header class="fg-hero" data-nav-cream>
-      <h1 class="headline-xl">{GUIDE_TITLE}</h1>
+      <h1 class="headline-xl">{heading}</h1>
+      {updatedLabel && (
+        <p class="fg-updated">Last updated <time datetime={updated}>{updatedLabel}</time></p>
+      )}
     </header>
 
     {
-      GUIDE.map((section) => {
-        const look = LOOK[section.id] ?? { ground: 'cream' };
+      sections.map((section) => {
+        const look = looks[section.id] ?? { ground: 'cream' };
         const firstP = section.blocks.findIndex((b) => b.kind === 'p');
         return (
           <section
@@ -109,6 +133,13 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     font-size: clamp(36px, 5.2vw, 75px);
     line-height: 1.02;
   }
+  /* Policies carry a "Last updated" line under the title. */
+  .fg-updated {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(16px, 1.4vw, 20px);
+  }
 
   /* Bands */
   .fg .band {
@@ -128,7 +159,10 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     max-width: calc(1132px);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    /* min-content: the title column never gets narrower than its longest
+       word. "Communication" at 52px is ~518px, wider than 5fr at 1440, and
+       the global overflow-wrap: break-word was splitting it mid-word. */
+    grid-template-columns: minmax(min-content, 5fr) minmax(0, 7fr);
     column-gap: clamp(32px, 5vw, 80px);
     align-items: start;
   }
@@ -166,6 +200,20 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     margin: 0 -2px;
   }
   .fg .body a:hover { text-decoration-thickness: 3px; }
+  /* Email and phone read as contact details, not links (JY, Nov 26). They
+     still open mail / call when tapped; the underline returns on hover and
+     keyboard focus. Page links (the cancellation policy) stay underlined. */
+  .fg .body a[href^='mailto:'],
+  .fg .body a[href^='tel:'] {
+    text-decoration: none;
+  }
+  .fg .body a[href^='mailto:']:hover,
+  .fg .body a[href^='tel:']:hover,
+  .fg .body a[href^='mailto:']:focus-visible,
+  .fg .body a[href^='tel:']:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
   /* Keep inline links from inflating line height in running text. */
   .fg .body p a { line-height: inherit; min-height: 0; display: inline; padding: 0; margin: 0; }
   .fg .body p a { padding-block: 12px; background-clip: padding-box; }

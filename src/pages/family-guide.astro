@@ -1,52 +1,17 @@
 ---
-// STAND Family Guide (Nov 26 2026 brief). Unlisted: not in the nav, not in
-// the footer, and noindex, so STAND shares it by link only (enrollment
-// emails, Sawyer). To list it in the footer's For Family column later, see
-// FINE_PRINT in src/data/fine-print.ts.
+// STAND Family Guide (Nov 26 2026 brief). Design: GuidePage (proto B,
+// promoted Nov 26). Copy: src/data/family-guide.ts — edit copy there only.
 //
-// /family-handbook redirects here (vercel.json), since the first brief
-// called it the Family Handbook.
-//
-// Copy lives in src/data/family-guide.ts (shared with the design protos at
-// /proto/family-guide-b and -c). This page only decides how it looks.
-import PolicyPage from '@/layouts/PolicyPage.astro';
-import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
+// Listed in the footer's For Family column as "Family Handbook" (JY, Nov 26),
+// so it is indexable. /family-handbook redirects here (vercel.json).
+import GuidePage from '@/layouts/GuidePage.astro';
+import { GUIDE, GUIDE_LOOK, GUIDE_TITLE } from '@/data/family-guide';
 ---
 
-<PolicyPage
+<GuidePage
   title="Family Guide | STAND"
   description="Everything STAND families need before the first session: drop-off and pickup, what to bring, how we work together, health and safety, and tuition."
   heading={GUIDE_TITLE}
-  noindex
->
-  {
-    GUIDE.map((section) => (
-      <>
-        <h2 id={section.id}>{section.title}</h2>
-        {section.blocks.map((block) =>
-          block.kind === 'p' ? (
-            <p>
-              {block.lead && <strong>{block.lead} </strong>}
-              <Fragment set:html={block.html} />
-            </p>
-          ) : block.kind === 'list' ? (
-            <ul>
-              {block.items.map((item) => (
-                <li>
-                  {item.lead && <strong>{item.lead} </strong>}
-                  <Fragment set:html={item.html} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>
-              <strong>{block.name}</strong>
-              <br />
-              {block.role}
-            </p>
-          ),
-        )}
-      </>
-    ))
-  }
-</PolicyPage>
+  sections={GUIDE}
+  looks={GUIDE_LOOK}
+/>

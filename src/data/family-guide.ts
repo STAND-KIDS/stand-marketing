@@ -1,6 +1,5 @@
-// STAND Family Guide copy — the single source for /family-guide and its
-// design protos (/proto/family-guide-b, /proto/family-guide-c). Pages decide
-// how it looks; this file decides what it says. Edit copy here only.
+// STAND Family Guide copy — the single source for /family-guide. The page
+// decides how it looks; this file decides what it says. Edit copy here only.
 //
 // Final copy from the Nov 26 2026 brief, with two deliberate changes:
 //   - Phone: the brief says to use Lauren's urgent number for now, so
@@ -9,9 +8,9 @@
 //   - "Read the full Cancellation and Refund Policy" links to the live page,
 //     not the Google Doc.
 //
-// `html` strings are rendered with set:html so a few can carry links. That
-// is only safe because every string here is written by us in this file.
-// Never feed visitor- or API-supplied text into this list.
+// `html` strings are rendered with set:html (see guide-types.ts for why
+// that is safe here).
+import type { GuideSection, SectionLook } from './guide-types';
 
 export const EMAIL = 'hello@standkids.com';
 export const URGENT_PHONE = { label: '646-522-9433', href: 'tel:+16465229433' };
@@ -21,34 +20,12 @@ const phone = `<a href="${URGENT_PHONE.href}">${URGENT_PHONE.label}</a>`;
 
 export const GUIDE_TITLE = 'STAND Family Guide';
 
-/** A paragraph; `lead` is a bold lead-in sentence shown before `html`. */
-export interface ParagraphBlock {
-  kind: 'p';
-  lead?: string;
-  html: string;
-}
-
-/** A bulleted list; each item may have a bold `lead`. */
-export interface ListBlock {
-  kind: 'list';
-  items: { lead?: string; html: string }[];
-}
-
-/** The founder's sign-off under the welcome note. */
-export interface SignoffBlock {
-  kind: 'signoff';
-  name: string;
-  role: string;
-}
-
-export type GuideBlock = ParagraphBlock | ListBlock | SignoffBlock;
-
-export interface GuideSection {
-  /** Stable anchor id (e.g. /family-guide#drop-off). Don't rename: shared links use them. */
-  id: string;
-  title: string;
-  blocks: GuideBlock[];
-}
+/** Cream everywhere, one green band for the values; two serif opening lines. */
+export const GUIDE_LOOK: Record<string, SectionLook> = {
+  welcome: { ground: 'cream', statement: true },
+  'what-stand-is': { ground: 'cream', statement: true },
+  values: { ground: 'green' },
+};
 
 export const GUIDE: GuideSection[] = [
   {

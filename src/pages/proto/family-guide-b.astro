@@ -8,21 +8,15 @@ import Nav from '@/components/founders/Nav.astro';
 import Closing from '@/components/founders/Closing.astro';
 import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
 
-// Per-section ground + optional object illustration + whether the first
-// paragraph is set as a big serif statement line.
-const LOOK: Record<string, { ground: string; img?: string; statement?: boolean }> = {
+// Per-section ground + whether the first paragraph is set as a big serif
+// statement line. Cream everywhere with one green band for the values (JY,
+// Nov 26: no object illustrations, far fewer colour bands). The red nav and
+// red footer already carry the brand colour.
+const LOOK: Record<string, { ground: string; statement?: boolean }> = {
   welcome: { ground: 'cream', statement: true },
-  'what-stand-is': { ground: 'red', img: 'YellowMegaphone', statement: true },
-  'before-the-first-session': { ground: 'cream' },
-  'drop-off': { ground: 'green' },
-  'what-to-bring': { ground: 'mustard', img: 'GreenBox' },
-  values: { ground: 'pink' },
-  parents: { ground: 'cream', img: 'YellowLightbulb' },
-  'when-things-go-sideways': { ground: 'red', statement: true },
-  'health-and-safety': { ground: 'green' },
-  photos: { ground: 'cream' },
-  'tuition-and-refunds': { ground: 'mustard', img: 'BlueReceipt' },
-  communication: { ground: 'pink', img: 'CreamMug' },
+  'what-stand-is': { ground: 'cream', statement: true },
+  values: { ground: 'green' },
+  'when-things-go-sideways': { ground: 'cream', statement: true },
 };
 ---
 
@@ -58,16 +52,6 @@ const LOOK: Record<string, { ground: string; img?: string; statement?: boolean }
             <div class="inner">
               <div class="side" data-rv style="--rvi: 0">
                 <h2 class="headline-xl" id={`${section.id}-title`}>{section.title}</h2>
-                {look.img && (
-                  <img
-                    src={`/brand/STAND_PNG_${look.img}.webp`}
-                    alt=""
-                    width="240"
-                    height="240"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
               </div>
               <div class="body">
                 {section.blocks.map((block, i) =>
@@ -173,10 +157,6 @@ const LOOK: Record<string, { ground: string; img?: string; statement?: boolean }
     flex-direction: column;
     gap: 32px;
   }
-  .fg .side img {
-    width: clamp(140px, 16vw, 220px);
-    height: auto;
-  }
 
   .fg .body {
     max-width: 65ch;
@@ -267,16 +247,7 @@ const LOOK: Record<string, { ground: string; img?: string; statement?: boolean }
       grid-template-columns: minmax(0, 1fr);
       row-gap: 28px;
     }
-    .fg .side { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 16px; }
-    .fg .side img { width: 96px; flex: none; }
-    /* Flex items default to min-width:auto (their longest word), which
-       pushed the image past the right edge on phones. Let the title shrink. */
-    .fg .side > :first-child { min-width: 0; flex: 0 1 auto; }
-    /* Long single-word titles ("Communication" is 339px at 34px) need the
-       whole row: scale titles with the viewport, and let the image wrap
-       to its own line, kept right, when the title won't share. */
-    .fg .side { flex-wrap: wrap; }
-    .fg .side img { margin-left: auto; }
+    /* "Communication" is 339px at 34px: scale titles so it fits a phone. */
     .fg .side h2 { font-size: clamp(28px, 8.4vw, 34px); }
   }
   @media (max-width: 768px) {

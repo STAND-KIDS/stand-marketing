@@ -1,7 +1,8 @@
 ---
 // Proto C: editorial Family Guide.
-// Concept: every section is its own colour field (brand palette), set in
-// oversized Pie Pie headlines over tight Authentic Sans body, with the
+// Concept: one red poster hero, then a calm cream page (JY, Nov 26: no
+// object cut-outs, far fewer colour fields), set in oversized Pie Pie
+// headlines over tight Authentic Sans body, with the
 // welcome note and the five values in Editorial New. A fixed index
 // (scroll-spy, left rail on desktop, bottom jump bar on phones) tracks the
 // section under the viewport. All copy comes from src/data/family-guide.ts.
@@ -14,28 +15,10 @@ import Nav from '@/components/founders/Nav.astro';
 import Closing from '@/components/founders/Closing.astro';
 import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
 
-// Ground per section id (brand palette). 'cream' sections also carry
-// data-nav-cream so the nav flips to its red state over them.
-const GROUNDS: Record<string, string> = {
-  welcome: 'cream',
-  'what-stand-is': 'green',
-  'before-the-first-session': 'cream',
-  'drop-off': 'mustard',
-  'what-to-bring': 'cream',
-  values: 'red',
-  parents: 'cream',
-  'when-things-go-sideways': 'blue',
-  'health-and-safety': 'cream',
-  photos: 'mustard',
-  'tuition-and-refunds': 'green',
-  communication: 'black',
-};
-
-// Big cut-outs, used sparingly.
-const CUTOUTS: Record<string, string> = {
-  'drop-off': '/brand/STAND_PNG_RedOpenSign.webp',
-  'tuition-and-refunds': '/brand/STAND_PNG_BlueReceipt.webp',
-};
+// Ground per section id. Everything is cream: the red hero and red footer
+// are the page's only colour. Add an id here to give a section its own
+// field. 'cream' sections carry data-nav-cream so the nav stays legible.
+const GROUNDS: Record<string, string> = {};
 
 const words = GUIDE_TITLE.split(' ');
 ---
@@ -52,14 +35,6 @@ const words = GUIDE_TITLE.split(' ');
       <h1 class="fg-title">
         {words.map((w) => <span class="fg-title-word">{w}</span>)}
       </h1>
-      <img
-        class="fg-hero-art"
-        src="/brand/STAND_PNG_YellowMegaphone.webp"
-        alt=""
-        width="3000"
-        height="3000"
-        decoding="async"
-      />
     </header>
 
     {/* Index: hidden without JS. Desktop = fixed left rail; phones = bottom jump bar. */}
@@ -78,7 +53,6 @@ const words = GUIDE_TITLE.split(' ');
     {
       GUIDE.map((section, i) => {
         const ground = GROUNDS[section.id] ?? 'cream';
-        const art = CUTOUTS[section.id];
         const first = section.id === 'welcome';
         const values = section.id === 'values';
         return (
@@ -116,7 +90,6 @@ const words = GUIDE_TITLE.split(' ');
                 )}
               </div>
             </div>
-            {art && <img class="fg-art" src={art} alt="" width="3000" height="3000" loading="lazy" decoding="async" />}
           </section>
         );
       })
@@ -150,7 +123,7 @@ const words = GUIDE_TITLE.split(' ');
   .fg-hero {
     position: relative;
     overflow: hidden;
-    min-height: 100svh;
+    min-height: 72svh;
     padding: calc(var(--header-h) + 40px) var(--fg-gutter) 48px;
     display: flex;
     align-items: flex-end;
@@ -168,15 +141,6 @@ const words = GUIDE_TITLE.split(' ');
     max-width: 100%;
   }
   .fg-title-word { display: block; }
-  .fg-hero-art {
-    position: absolute;
-    z-index: 1;
-    right: -22%;
-    top: 6%;
-    width: min(95vw, 900px);
-    height: auto;
-    pointer-events: none;
-  }
 
   /* Sections */
   .fg-sec {
@@ -236,11 +200,6 @@ const words = GUIDE_TITLE.split(' ');
     margin-bottom: 0.15em;
   }
 
-  /* Cut-outs: big, bleeding off the field */
-  .fg-art { position: absolute; z-index: 1; height: auto; pointer-events: none; }
-  .fg-drop-off .fg-art { width: min(86vw, 560px); right: -18%; bottom: -8%; }
-  .fg-tuition-and-refunds .fg-art { width: min(80vw, 520px); right: -16%; top: -4%; opacity: 1; }
-  .fg-drop-off .fg-sec-inner, .fg-tuition-and-refunds .fg-sec-inner { padding-bottom: 0; }
 
   /* Index */
   .fg-index { display: none; }
@@ -292,9 +251,6 @@ const words = GUIDE_TITLE.split(' ');
     .fg-sec.is-flip .fg-body { margin-left: 0; }
     .fg-sec.is-flip .fg-h2 { margin-left: 22%; }
     .fg-body.is-note, .fg-body.is-values { margin-left: 0; }
-    .fg-drop-off .fg-art { right: -6%; bottom: -14%; width: 640px; }
-    .fg-tuition-and-refunds .fg-art { right: -4%; top: 2%; width: 560px; }
-    .fg-hero-art { right: -4%; top: 4%; width: min(62vw, 980px); }
 
     .fg-js .fg-index {
       left: 0; right: auto; top: calc(var(--header-h) + 40px); bottom: auto;
@@ -323,16 +279,12 @@ const words = GUIDE_TITLE.split(' ');
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       @keyframes fg-rise { from { opacity: 0; transform: translateY(48px); } to { opacity: 1; transform: none; } }
-      @keyframes fg-drift { from { transform: translateY(8vh) rotate(-3deg); } to { transform: translateY(-8vh) rotate(3deg); } }
-      @keyframes fg-hero-up { to { transform: translateY(-14vh); } }
 
       .fg-h2, .fg-body > *, .fg-list li {
         animation: fg-rise linear both;
         animation-timeline: view();
         animation-range: entry 0% entry 55%;
       }
-      .fg-art { animation: fg-drift linear both; animation-timeline: view(); }
-      .fg-hero-art { animation: fg-hero-up linear both; animation-timeline: scroll(root); animation-range: 0 100svh; }
     }
   }
 </style>

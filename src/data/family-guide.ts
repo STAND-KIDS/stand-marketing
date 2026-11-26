@@ -22,8 +22,9 @@ export const GUIDE_TITLE = 'STAND Family Guide';
 
 /** Cream everywhere, one green band for the values; two serif opening lines. */
 export const GUIDE_LOOK: Record<string, SectionLook> = {
-  // No visible "Welcome" title (JY, Nov 26): Lauren's note opens the page.
-  welcome: { ground: 'cream', statement: true, hideTitle: true },
+  // No visible "Welcome" title; Lauren's note opens the page as a letter
+  // (JY, Nov 26).
+  welcome: { ground: 'cream', hideTitle: true, letter: true },
   'what-stand-is': { ground: 'cream', statement: true },
   values: { ground: 'green' },
 };

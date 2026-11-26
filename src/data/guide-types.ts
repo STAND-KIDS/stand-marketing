@@ -44,4 +44,8 @@ export interface SectionLook {
   /** Hide the section title visually (kept for screen readers and the
    *  #anchor); the body sits in the text column with no title beside it. */
   hideTitle?: boolean;
+  /** Set the section as a letter: a sheet of stationery with the STAND
+   *  letterhead, serif type, and a handwritten signature over the sign-off.
+   *  The sheet spans the full content width instead of the text column. */
+  letter?: boolean;
 }

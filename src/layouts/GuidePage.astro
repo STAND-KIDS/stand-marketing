@@ -77,7 +77,6 @@ const updatedLabel = updated
               )}
               {look.letter ? (
                 <div class="letter" data-rv style="--rvi: 0">
-                  <div class="letter-head" role="img" aria-label="STAND"></div>
                   {section.blocks.map((block, i) =>
                     block.kind === 'p' ? (
                       <p class:list={[{ 'letter-open': i === firstP }]}>
@@ -203,7 +202,7 @@ const updatedLabel = updated
   }
   /* Letter: a sheet of warm white stationery resting on the cream page.
      Square corners and a soft, low shadow read as paper on a desk, not an
-     app card; the faint grain lives on the sheet only. STAND letterhead,
+     app card; the faint grain lives on the sheet only. No letterhead (JY):
      Editorial New throughout, and Lauren's name handwritten in Mayonice
      (the hand from the About proto) over the typed sign-off. */
   @font-face {
@@ -223,14 +222,6 @@ const updatedLabel = updated
     box-shadow:
       0 1px 1px rgba(40, 30, 0, 0.06),
       0 28px 50px -30px rgba(40, 30, 0, 0.35);
-  }
-  .fg .letter-head {
-    width: 96px;
-    aspect-ratio: 199.29 / 47.33;
-    margin-bottom: clamp(28px, 3.6vw, 48px);
-    background: var(--stand-red);
-    -webkit-mask: url('/brand/logo.svg') no-repeat left center / contain;
-    mask: url('/brand/logo.svg') no-repeat left center / contain;
   }
   .fg .letter p {
     margin: 0 0 1em;

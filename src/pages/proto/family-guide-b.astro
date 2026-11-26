@@ -31,11 +31,6 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
 
     <header class="fg-hero" data-nav-cream>
       <h1 class="headline-xl">{GUIDE_TITLE}</h1>
-      <nav class="jump" aria-label="Guide sections">
-        <ul>
-          {GUIDE.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
-        </ul>
-      </nav>
     </header>
 
     {
@@ -103,7 +98,8 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     text-wrap: balance;
   }
 
-  /* Hero: the cream page ground, title large, jump list under it. */
+  /* Hero: the cream page ground and the title. No jump list (JY, Nov 26):
+     the homepage has none, and every section keeps its anchor id. */
   .fg-hero {
     padding: 140px 48px 24px;
     max-width: calc(1132px + 2 * 48px);
@@ -114,25 +110,6 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     font-size: clamp(36px, 5.2vw, 75px);
     line-height: 1.02;
   }
-  .jump ul {
-    list-style: none;
-    margin: 32px 0 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 28px;
-  }
-  .jump a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    font-size: 19px;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1.5px;
-  }
-  .jump a:hover { text-decoration-thickness: 3px; }
 
   /* Bands */
   .fg .band {
@@ -256,7 +233,6 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     .fg-hero { padding: 108px 20px 16px; }
     .fg .band { padding: var(--space-5) 20px; }
     .fg-hero + .band.cream { padding-top: 24px; }
-    .jump ul { gap: 0 20px; }
   }
 </style>
 

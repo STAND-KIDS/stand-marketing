@@ -12,7 +12,7 @@ import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
 // statement line. Cream everywhere with one green band for the values (JY,
 // Nov 26: no object illustrations, far fewer colour bands). The red nav and
 // red footer already carry the brand colour.
-// `callout` sets that statement on a flat mustard-tint block (JY, Nov 26).
+// `callout` sets that statement on the paper-tag sticker (JY, Nov 26).
 // Welcome stays plain: it's a letter, signed by Lauren.
 const LOOK: Record<string, { ground: string; statement?: boolean; callout?: boolean }> = {
   welcome: { ground: 'cream', statement: true },
@@ -180,15 +180,34 @@ const LOOK: Record<string, { ground: string; statement?: boolean; callout?: bool
     letter-spacing: -0.01em;
   }
 
-  /* Callout: a flat tinted block, square corners, no border or shadow, so
-     it reads like a printed panel, not an app card. It bleeds outward by
-     its own padding, which keeps the serif text on the same left edge as
-     the body copy below; on phones that makes it a full-width band. */
+  /* Callout: the site's paper-tag sticker (SignupButton.astro), same
+     values: white face, 2px black border, hard 5px offset shadow, -5deg
+     skew. The sticker is a ::before layer so the skew stays off the serif
+     type. On desktop it bleeds out by its padding so the text keeps the
+     body's left edge; on phones it sits inside the gutter, leaving room
+     for the skew and shadow. */
   .fg .body .callout {
     --pad-x: clamp(20px, 2.6vw, 40px);
+    position: relative;
+    isolation: isolate;
     padding: clamp(20px, 2.4vw, 36px) var(--pad-x);
     margin-inline: calc(-1 * var(--pad-x));
-    background: color-mix(in srgb, var(--stand-mustard) 40%, var(--stand-cream));
+    color: var(--stand-black);
+  }
+  .fg .body .callout::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--stand-white);
+    border: 2px solid var(--stand-black);
+    box-shadow: 5px 5px 0 var(--stand-black);
+    transform: skewX(-5deg);
+  }
+  @media (max-width: 768px) {
+    .fg .body .callout {
+      margin-inline: 4px 10px;
+    }
   }
 
   .fg .body ul {

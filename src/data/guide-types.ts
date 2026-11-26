@@ -41,4 +41,7 @@ export interface SectionLook {
   ground: 'cream' | 'green';
   /** Set the section's first paragraph as a large Editorial New line. */
   statement?: boolean;
+  /** Hide the section title visually (kept for screen readers and the
+   *  #anchor); the body sits in the text column with no title beside it. */
+  hideTitle?: boolean;
 }

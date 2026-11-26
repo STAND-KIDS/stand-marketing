@@ -62,15 +62,19 @@ const updatedLabel = updated
         const firstP = section.blocks.findIndex((b) => b.kind === 'p');
         return (
           <section
-            class={`band ${look.ground}`}
+            class:list={['band', look.ground, { 'no-title': look.hideTitle }]}
             id={section.id}
             aria-labelledby={`${section.id}-title`}
             data-nav-cream={look.ground === 'cream' ? '' : undefined}
           >
             <div class="inner">
-              <div class="side" data-rv style="--rvi: 0">
-                <h2 class="headline-xl" id={`${section.id}-title`}>{section.title}</h2>
-              </div>
+              {look.hideTitle ? (
+                <h2 class="visually-hidden" id={`${section.id}-title`}>{section.title}</h2>
+              ) : (
+                <div class="side" data-rv style="--rvi: 0">
+                  <h2 class="headline-xl" id={`${section.id}-title`}>{section.title}</h2>
+                </div>
+              )}
               <div class="body">
                 {section.blocks.map((block, i) =>
                   block.kind === 'p' ? (
@@ -166,6 +170,8 @@ const updatedLabel = updated
     column-gap: clamp(32px, 5vw, 80px);
     align-items: start;
   }
+  /* Untitled section: the body keeps the text column, nothing beside it. */
+  .fg .band.no-title .body { grid-column: 2; }
   .fg .side {
     display: flex;
     flex-direction: column;
@@ -278,6 +284,7 @@ const updatedLabel = updated
       grid-template-columns: minmax(0, 1fr);
       row-gap: 28px;
     }
+    .fg .band.no-title .body { grid-column: auto; }
   }
   @media (max-width: 768px) {
     .fg-hero { padding: 108px 20px 16px; }

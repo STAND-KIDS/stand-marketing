@@ -10,6 +10,9 @@
 // tab dropped from the bar), and the bar names the landing page too so
 // cross-page wayfinding doesn't hang on the wordmark alone. Tabs are a
 // prop: the homepage uses the default, /about re-marks current.
+// Nov 2026: "Sign up" goes to Sawyer enrollment (ENROLL_HREF), not /enroll.
+import { ENROLL_HREF } from '@/data/enroll';
+
 interface Tab {
   label: string;
   href: string;
@@ -57,7 +60,7 @@ const {
     }
   </div>
 
-  <a href="/enroll" class="login">
+  <a href={ENROLL_HREF} class="login">
     <strong>Sign up</strong>
   </a>
 </nav>

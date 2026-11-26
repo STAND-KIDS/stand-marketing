@@ -115,7 +115,9 @@ const LOOK: Record<string, { ground: string; statement?: boolean; callout?: bool
 
   /* Bands */
   .fg .band {
-    padding: clamp(56px, 8vw, 112px) 48px;
+    /* Two-thirds of the first pass (JY, Nov 26: section gaps read too big
+       on a laptop). Phones keep var(--space-5) below. */
+    padding: clamp(37px, 5.33vw, 75px) 48px;
   }
   .fg .band.cream { background: var(--stand-cream); color: var(--stand-black); }
   .fg .band.red { background: var(--stand-red); color: var(--stand-cream); }

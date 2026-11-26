@@ -12,11 +12,13 @@ import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
 // statement line. Cream everywhere with one green band for the values (JY,
 // Nov 26: no object illustrations, far fewer colour bands). The red nav and
 // red footer already carry the brand colour.
-const LOOK: Record<string, { ground: string; statement?: boolean }> = {
+// `callout` sets that statement on a flat mustard-tint block (JY, Nov 26).
+// Welcome stays plain: it's a letter, signed by Lauren.
+const LOOK: Record<string, { ground: string; statement?: boolean; callout?: boolean }> = {
   welcome: { ground: 'cream', statement: true },
-  'what-stand-is': { ground: 'cream', statement: true },
+  'what-stand-is': { ground: 'cream', statement: true, callout: true },
   values: { ground: 'green' },
-  'when-things-go-sideways': { ground: 'cream', statement: true },
+  'when-things-go-sideways': { ground: 'cream', statement: true, callout: true },
 };
 ---
 
@@ -51,7 +53,7 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
               <div class="body">
                 {section.blocks.map((block, i) =>
                   block.kind === 'p' ? (
-                    <p class:list={[{ statement: look.statement && i === firstP }]} data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                    <p class:list={[{ statement: look.statement && i === firstP, callout: look.callout && i === firstP }]} data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
                       {block.lead && <strong>{block.lead} </strong>}
                       <Fragment set:html={block.html} />
                     </p>
@@ -176,6 +178,17 @@ const LOOK: Record<string, { ground: string; statement?: boolean }> = {
     font-size: clamp(26px, 3.2vw, 48px);
     line-height: 1.18;
     letter-spacing: -0.01em;
+  }
+
+  /* Callout: a flat tinted block, square corners, no border or shadow, so
+     it reads like a printed panel, not an app card. It bleeds outward by
+     its own padding, which keeps the serif text on the same left edge as
+     the body copy below; on phones that makes it a full-width band. */
+  .fg .body .callout {
+    --pad-x: clamp(20px, 2.6vw, 40px);
+    padding: clamp(20px, 2.4vw, 36px) var(--pad-x);
+    margin-inline: calc(-1 * var(--pad-x));
+    background: color-mix(in srgb, var(--stand-mustard) 40%, var(--stand-cream));
   }
 
   .fg .body ul {

@@ -1,0 +1,319 @@
+---
+// Proto B — Family Guide in the homepage's own design language: full-bleed
+// brand-ground bands, Pie Pie headlines, Editorial New statement lines,
+// data-rv chunk reveals, Nav + Closing chrome. Copy comes only from
+// src/data/family-guide.ts.
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/founders/Nav.astro';
+import Closing from '@/components/founders/Closing.astro';
+import { GUIDE, GUIDE_TITLE } from '@/data/family-guide';
+
+// Per-section ground + optional object illustration + whether the first
+// paragraph is set as a big serif statement line.
+const LOOK: Record<string, { ground: string; img?: string; statement?: boolean }> = {
+  welcome: { ground: 'cream', statement: true },
+  'what-stand-is': { ground: 'red', img: 'YellowMegaphone', statement: true },
+  'before-the-first-session': { ground: 'cream' },
+  'drop-off': { ground: 'green' },
+  'what-to-bring': { ground: 'mustard', img: 'GreenBox' },
+  values: { ground: 'pink' },
+  parents: { ground: 'cream', img: 'YellowLightbulb' },
+  'when-things-go-sideways': { ground: 'red', statement: true },
+  'health-and-safety': { ground: 'green' },
+  photos: { ground: 'cream' },
+  'tuition-and-refunds': { ground: 'mustard', img: 'BlueReceipt' },
+  communication: { ground: 'pink', img: 'CreamMug' },
+};
+---
+
+<Layout title="Proto B — Family Guide | STAND" noindex>
+  <main class="founders-page fg">
+    <Nav
+      tabs={[
+        { label: 'Home', href: '/' },
+        { label: 'About', href: '/about' },
+      ]}
+    />
+
+    <header class="fg-hero" data-nav-cream>
+      <h1 class="headline-xl">{GUIDE_TITLE}</h1>
+      <nav class="jump" aria-label="Guide sections">
+        <ul>
+          {GUIDE.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+        </ul>
+      </nav>
+    </header>
+
+    {
+      GUIDE.map((section) => {
+        const look = LOOK[section.id] ?? { ground: 'cream' };
+        const firstP = section.blocks.findIndex((b) => b.kind === 'p');
+        return (
+          <section
+            class={`band ${look.ground}`}
+            id={section.id}
+            aria-labelledby={`${section.id}-title`}
+            data-nav-cream={look.ground === 'cream' ? '' : undefined}
+          >
+            <div class="inner">
+              <div class="side" data-rv style="--rvi: 0">
+                <h2 class="headline-xl" id={`${section.id}-title`}>{section.title}</h2>
+                {look.img && (
+                  <img
+                    src={`/brand/STAND_PNG_${look.img}.webp`}
+                    alt=""
+                    width="240"
+                    height="240"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </div>
+              <div class="body">
+                {section.blocks.map((block, i) =>
+                  block.kind === 'p' ? (
+                    <p class:list={[{ statement: look.statement && i === firstP }]} data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                      {block.lead && <strong>{block.lead} </strong>}
+                      <Fragment set:html={block.html} />
+                    </p>
+                  ) : block.kind === 'list' ? (
+                    <ul data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                      {block.items.map((item) => (
+                        <li>
+                          {item.lead && <strong>{item.lead} </strong>}
+                          <Fragment set:html={item.html} />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p class="signoff" data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                      <span class="name-line">{block.name}</span>
+                      <span class="role">{block.role}</span>
+                    </p>
+                  ),
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })
+    }
+
+    <Closing />
+  </main>
+</Layout>
+
+<style is:global>
+  .fg [id] {
+    scroll-margin-top: 84px;
+  }
+
+  .fg .headline-xl {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(34px, 4.4vw, 64px);
+    line-height: 1.04;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+  }
+
+  /* Hero: the cream page ground, title large, jump list under it. */
+  .fg-hero {
+    padding: 140px 48px 24px;
+    max-width: calc(1132px + 2 * 48px);
+    margin: 0 auto;
+  }
+  .fg-hero .headline-xl {
+    font-size: clamp(44px, 8.4vw, 120px);
+    line-height: 1;
+  }
+  .jump ul {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 28px;
+  }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1.5px;
+  }
+  .jump a:hover { text-decoration-thickness: 3px; }
+
+  /* Bands */
+  .fg .band {
+    padding: clamp(56px, 8vw, 112px) 48px;
+  }
+  .fg .band.cream { background: var(--stand-cream); color: var(--stand-black); }
+  .fg .band.red { background: var(--stand-red); color: var(--stand-cream); }
+  .fg .band.green { background: var(--stand-green); color: var(--stand-cream); }
+  .fg .band.mustard { background: var(--stand-mustard); color: var(--stand-black); }
+  .fg .band.pink { background: var(--stand-pink); color: var(--stand-black); }
+  /* The hero is cream, welcome continues it without a seam. */
+  .fg-hero + .band.cream { padding-top: clamp(24px, 3vw, 40px); }
+
+  .fg .inner {
+    max-width: calc(1132px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+  .fg .side {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .fg .side img {
+    width: clamp(140px, 16vw, 220px);
+    height: auto;
+  }
+
+  .fg .body {
+    max-width: 65ch;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .fg .body p,
+  .fg .body li {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+  .fg .body strong { font-weight: 700; }
+  .fg .body a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
+    padding: 0 2px;
+    margin: 0 -2px;
+  }
+  .fg .body a:hover { text-decoration-thickness: 3px; }
+  /* Keep inline links from inflating line height in running text. */
+  .fg .body p a { line-height: inherit; min-height: 0; display: inline; padding: 0; margin: 0; }
+  .fg .body p a { padding-block: 12px; background-clip: padding-box; }
+
+  .fg .body .statement {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(26px, 2.9vw, 40px);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+  }
+
+  .fg .body ul {
+    margin: 0;
+    padding: 0 0 0 1.25em;
+    list-style: disc;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .fg .body li::marker { font-size: 1em; }
+
+  .fg .signoff {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 6px;
+  }
+  .fg .signoff .name-line {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.1;
+  }
+
+  /* Chunk reveals — same recipe as the homepage. */
+  .rv-ready [data-rv] {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(2px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s ease;
+    transition-delay: calc(var(--rvi, 0) * 180ms);
+  }
+  .rv-shown [data-rv] {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv-ready [data-rv] {
+      transition: none !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .fg .inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 28px;
+    }
+    .fg .side { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 16px; }
+    .fg .side img { width: 96px; flex: none; }
+    /* Flex items default to min-width:auto (their longest word), which
+       pushed the image past the right edge on phones. Let the title shrink. */
+    .fg .side > :first-child { min-width: 0; flex: 0 1 auto; }
+    /* Long single-word titles ("Communication" is 339px at 34px) need the
+       whole row: scale titles with the viewport, and let the image wrap
+       to its own line, kept right, when the title won't share. */
+    .fg .side { flex-wrap: wrap; }
+    .fg .side img { margin-left: auto; }
+    .fg .side h2 { font-size: clamp(28px, 8.4vw, 34px); }
+  }
+  @media (max-width: 768px) {
+    .fg-hero { padding: 108px 20px 16px; }
+    .fg .band { padding: var(--space-5) 20px; }
+    .fg-hero + .band.cream { padding-top: 24px; }
+    .fg .body p, .fg .body li { font-size: 18px; }
+    .jump ul { gap: 0 20px; }
+  }
+</style>
+
+<script>
+  import Lenis from 'lenis';
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const lenis = new Lenis({ lerp: 0.1, anchors: true });
+    const raf = (time: number) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+  }
+
+  if ('IntersectionObserver' in window) {
+    document.querySelectorAll<HTMLElement>('.founders-page section').forEach((sec) => {
+      if (!sec.querySelector('[data-rv]')) return;
+      sec.classList.add('rv-ready');
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            sec.classList.add('rv-shown');
+            io.disconnect();
+          }
+        },
+        { threshold: 0.12 },
+      );
+      io.observe(sec);
+    });
+  }
+</script>

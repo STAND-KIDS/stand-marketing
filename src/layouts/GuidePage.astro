@@ -1,0 +1,424 @@
+---
+// GuidePage — the design for the site's long-form family pages (Family
+// Guide, Cancellation and Refund Policy). Promoted from Family Guide proto B
+// (JY, Nov 26): the homepage's own design language — Pie Pie section titles
+// beside a reading column, the homepage type scale, Editorial New statement
+// lines, the homepage's data-rv chunk reveals and Lenis scroll, Nav + Closing.
+//
+// Pages pass content as data (src/data/guide-types.ts), never markup, so
+// every page in this family looks the same and copy lives in src/data/.
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/founders/Nav.astro';
+import Closing from '@/components/founders/Closing.astro';
+import type { GuideSection, SectionLook } from '@/data/guide-types';
+
+interface Props {
+  /** Browser tab + share title. */
+  title: string;
+  description: string;
+  /** The on-page title (h1). */
+  heading: string;
+  sections: GuideSection[];
+  /** Per-section ground / statement styling, keyed by section id. */
+  looks?: Record<string, SectionLook>;
+  /** ISO date (YYYY-MM-DD) the copy last changed; shown under the title. */
+  updated?: string;
+  noindex?: boolean;
+}
+
+const { title, description, heading, sections, looks = {}, updated, noindex = false } = Astro.props;
+
+// Shown as "November 2, 2026". timeZone UTC: a bare ISO date parses as UTC
+// midnight, and formatting it in a US zone would print the day before.
+const updatedLabel = updated
+  ? new Date(updated).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    })
+  : null;
+---
+
+<Layout title={title} description={description} noindex={noindex}>
+  <main class="founders-page fg">
+    <Nav
+      tabs={[
+        { label: 'Home', href: '/' },
+        { label: 'About', href: '/about' },
+      ]}
+    />
+
+    <header class="fg-hero" data-nav-cream>
+      <h1 class="headline-xl">{heading}</h1>
+      {updatedLabel && (
+        <p class="fg-updated">Last updated <time datetime={updated}>{updatedLabel}</time></p>
+      )}
+    </header>
+
+    {
+      sections.map((section) => {
+        const look = looks[section.id] ?? { ground: 'cream' };
+        const firstP = section.blocks.findIndex((b) => b.kind === 'p');
+        return (
+          <section
+            class:list={['band', look.ground, { 'no-title': look.hideTitle }]}
+            id={section.id}
+            aria-labelledby={`${section.id}-title`}
+            data-nav-cream={look.ground === 'cream' ? '' : undefined}
+          >
+            <div class="inner">
+              {look.hideTitle ? (
+                <h2 class="visually-hidden" id={`${section.id}-title`}>{section.title}</h2>
+              ) : (
+                <div class="side" data-rv style="--rvi: 0">
+                  <h2 class="headline-xl" id={`${section.id}-title`}>{section.title}</h2>
+                </div>
+              )}
+              {look.letter ? (
+                <div class="letter" data-rv style="--rvi: 0">
+                  {section.blocks.map((block, i) =>
+                    block.kind === 'p' ? (
+                      <p class:list={[{ 'letter-open': i === firstP }]}>
+                        {block.lead && <strong>{block.lead} </strong>}
+                        <Fragment set:html={block.html} />
+                      </p>
+                    ) : block.kind === 'signoff' ? (
+                      <p class="letter-sign">
+                        {/* The handwritten name is decoration; the typed name
+                            below is what screen readers get. */}
+                        <span class="sig" aria-hidden="true">{block.name}</span>
+                        <span class="name">{block.name}</span>
+                        <span class="role">{block.role}</span>
+                      </p>
+                    ) : (
+                      <ul>
+                        {block.items.map((item) => (
+                          <li>
+                            {item.lead && <strong>{item.lead} </strong>}
+                            <Fragment set:html={item.html} />
+                          </li>
+                        ))}
+                      </ul>
+                    ),
+                  )}
+                </div>
+              ) : (
+              <div class="body">
+                {section.blocks.map((block, i) =>
+                  block.kind === 'p' ? (
+                    <p class:list={[{ statement: look.statement && i === firstP }]} data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                      {block.lead && <strong>{block.lead} </strong>}
+                      <Fragment set:html={block.html} />
+                    </p>
+                  ) : block.kind === 'list' ? (
+                    <ul data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                      {block.items.map((item) => (
+                        <li>
+                          {item.lead && <strong>{item.lead} </strong>}
+                          <Fragment set:html={item.html} />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p class="signoff" data-rv style={`--rvi: ${Math.min(i + 1, 4)}`}>
+                      <span class="name-line">{block.name}</span>
+                      <span class="role">{block.role}</span>
+                    </p>
+                  ),
+                )}
+              </div>
+              )}
+            </div>
+          </section>
+        );
+      })
+    }
+
+    <Closing />
+  </main>
+</Layout>
+
+<style is:global>
+  .fg [id] {
+    scroll-margin-top: 84px;
+  }
+
+  .fg .headline-xl {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    /* Homepage scale (Nov 26): same as the FAQ headline in Faq.astro. */
+    font-size: clamp(30px, 3.6vw, 52px);
+    line-height: 1.04;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+  }
+
+  /* Hero: the cream page ground and the title. No jump list (JY, Nov 26):
+     the homepage has none, and every section keeps its anchor id. */
+  .fg-hero {
+    padding: 140px 48px 24px;
+    max-width: calc(1132px + 2 * 48px);
+    margin: 0 auto;
+  }
+  .fg-hero .headline-xl {
+    /* The homepage's largest headline size (NewSpace .mega). */
+    font-size: clamp(36px, 5.2vw, 75px);
+    line-height: 1.02;
+  }
+  /* Policies carry a "Last updated" line under the title. */
+  .fg-updated {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(16px, 1.4vw, 20px);
+  }
+
+  /* Bands */
+  .fg .band {
+    /* Two-thirds of the first pass (JY, Nov 26: section gaps read too big
+       on a laptop). Phones keep var(--space-5) below. */
+    padding: clamp(37px, 5.33vw, 75px) 48px;
+  }
+  .fg .band.cream { background: var(--stand-cream); color: var(--stand-black); }
+  .fg .band.red { background: var(--stand-red); color: var(--stand-cream); }
+  .fg .band.green { background: var(--stand-green); color: var(--stand-cream); }
+  .fg .band.mustard { background: var(--stand-mustard); color: var(--stand-black); }
+  .fg .band.pink { background: var(--stand-pink); color: var(--stand-black); }
+  /* The hero is cream, welcome continues it without a seam. */
+  .fg-hero + .band.cream { padding-top: clamp(24px, 3vw, 40px); }
+
+  .fg .inner {
+    max-width: calc(1132px);
+    margin: 0 auto;
+    display: grid;
+    /* min-content: the title column never gets narrower than its longest
+       word. "Communication" at 52px is ~518px, wider than 5fr at 1440, and
+       the global overflow-wrap: break-word was splitting it mid-word. */
+    grid-template-columns: minmax(min-content, 5fr) minmax(0, 7fr);
+    column-gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+  /* Letter: a sheet of warm white stationery resting on the cream page.
+     Square corners and a soft, low shadow read as paper on a desk, not an
+     app card; the faint grain lives on the sheet only. No letterhead (JY):
+     Editorial New throughout, and Lauren's name handwritten in Mayonice
+     (the hand from the About proto) over the typed sign-off. */
+  @font-face {
+    font-family: 'Mayonice';
+    src: url('/fonts/Mayonice.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  .fg .letter {
+    grid-column: 1 / -1;
+    max-width: 760px;
+    padding: clamp(28px, 4.4vw, 64px) clamp(24px, 4.8vw, 72px) clamp(32px, 4.4vw, 60px);
+    background-color: #fffdf6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: var(--stand-black);
+    box-shadow:
+      0 1px 1px rgba(40, 30, 0, 0.06),
+      0 28px 50px -30px rgba(40, 30, 0, 0.35);
+  }
+  .fg .letter p {
+    margin: 0 0 1em;
+    max-width: 34em;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(18px, 1.5vw, 21px);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .fg .letter .letter-open {
+    font-size: clamp(24px, 2.2vw, 32px);
+    line-height: 1.22;
+  }
+  .fg .letter a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .fg .letter a:hover,
+  .fg .letter a:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .fg .letter .letter-sign {
+    display: flex;
+    flex-direction: column;
+    margin: clamp(28px, 3.4vw, 44px) 0 0;
+  }
+  .fg .letter-sign .sig {
+    margin-bottom: 12px;
+    font-family: 'Mayonice', var(--font-serif);
+    /* A signature never wraps: one line, smaller on phones. */
+    font-size: clamp(32px, 4vw, 56px);
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--stand-black);
+  }
+  .fg .letter-sign .name {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .fg .letter-sign .role {
+    font-family: var(--font-sans);
+    font-size: 15px;
+  }
+
+  /* Untitled section: the body keeps the text column, nothing beside it. */
+  .fg .band.no-title .body { grid-column: 2; }
+  .fg .side {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .fg .body {
+    max-width: 65ch;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .fg .body p,
+  .fg .body li {
+    margin: 0;
+    /* Homepage body size (Location .para). */
+    font-size: clamp(17px, 1.8vw, 24px);
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+  .fg .body strong { font-weight: 700; }
+  .fg .body a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
+    padding: 0 2px;
+    margin: 0 -2px;
+  }
+  .fg .body a:hover { text-decoration-thickness: 3px; }
+  /* Email and phone read as contact details, not links (JY, Nov 26). They
+     still open mail / call when tapped; the underline returns on hover and
+     keyboard focus. Page links (the cancellation policy) stay underlined. */
+  .fg .body a[href^='mailto:'],
+  .fg .body a[href^='tel:'] {
+    text-decoration: none;
+  }
+  .fg .body a[href^='mailto:']:hover,
+  .fg .body a[href^='tel:']:hover,
+  .fg .body a[href^='mailto:']:focus-visible,
+  .fg .body a[href^='tel:']:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+  /* Keep inline links from inflating line height in running text. */
+  .fg .body p a { line-height: inherit; min-height: 0; display: inline; padding: 0; margin: 0; }
+  .fg .body p a { padding-block: 12px; background-clip: padding-box; }
+
+  .fg .body .statement {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    /* 36px on a laptop (JY, Nov 26: the testimonial-quote size, 46px at
+       1440, read too big here). Phones stay at 26px. */
+    font-size: clamp(26px, 2.5vw, 36px);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+  }
+
+  .fg .body ul {
+    margin: 0;
+    padding: 0 0 0 1.25em;
+    list-style: disc;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .fg .body li::marker { font-size: 1em; }
+
+  .fg .signoff {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 6px;
+  }
+  .fg .signoff .name-line {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.1;
+  }
+
+  /* Chunk reveals — same recipe as the homepage. */
+  .rv-ready [data-rv] {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(2px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s ease;
+    transition-delay: calc(var(--rvi, 0) * 180ms);
+  }
+  .rv-shown [data-rv] {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv-ready [data-rv] {
+      transition: none !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .fg .inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 28px;
+    }
+    .fg .band.no-title .body { grid-column: auto; }
+  }
+  @media (max-width: 768px) {
+    .fg-hero { padding: 108px 20px 16px; }
+    .fg .band { padding: var(--space-5) 20px; }
+    .fg-hero + .band.cream { padding-top: 24px; }
+  }
+</style>
+
+<script>
+  import Lenis from 'lenis';
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const lenis = new Lenis({ lerp: 0.1, anchors: true });
+    const raf = (time: number) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+  }
+
+  if ('IntersectionObserver' in window) {
+    document.querySelectorAll<HTMLElement>('.founders-page section').forEach((sec) => {
+      if (!sec.querySelector('[data-rv]')) return;
+      sec.classList.add('rv-ready');
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            sec.classList.add('rv-shown');
+            io.disconnect();
+          }
+        },
+        { threshold: 0.12 },
+      );
+      io.observe(sec);
+    });
+  }
+</script>

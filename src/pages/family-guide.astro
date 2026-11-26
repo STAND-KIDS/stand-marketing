@@ -1,0 +1,17 @@
+---
+// STAND Family Guide (Nov 26 2026 brief). Design: GuidePage (proto B,
+// promoted Nov 26). Copy: src/data/family-guide.ts — edit copy there only.
+//
+// Listed in the footer's For Family column as "Family Handbook" (JY, Nov 26),
+// so it is indexable. /family-handbook redirects here (vercel.json).
+import GuidePage from '@/layouts/GuidePage.astro';
+import { GUIDE, GUIDE_LOOK, GUIDE_TITLE } from '@/data/family-guide';
+---
+
+<GuidePage
+  title="Family Guide | STAND"
+  description="Everything STAND families need before the first session: drop-off and pickup, what to bring, how we work together, health and safety, and tuition."
+  heading={GUIDE_TITLE}
+  sections={GUIDE}
+  looks={GUIDE_LOOK}
+/>

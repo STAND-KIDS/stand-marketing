@@ -1,4 +1,5 @@
-// Fine Print — the footer's policy links (Nov 2026, January enrollment).
+// Footer "For Family" column (named Fine Print until Nov 26 2026; the
+// file and FINE_PRINT keep the old name). The policy links for families.
 // One list, read by the Closing footer. Each policy page is linked from
 // outside the site too (enrollment emails, Sawyer checkout), so an `href`
 // here is a public contract: never rename one without a redirect in
@@ -17,6 +18,7 @@ export interface FinePrintLink {
 
 export const FINE_PRINT: FinePrintLink[] = [
   { label: 'Cancellation Policy', href: '/cancellation-policy', published: true },
-  // Draft: src/pages/_family-handbook.astro. Copy waits on cohort dates/times.
-  { label: 'Family Handbook', href: '/family-handbook', published: false },
+  // The page is titled "STAND Family Guide"; the footer calls it the
+  // Family Handbook (JY, Nov 26).
+  { label: 'Family Handbook', href: '/family-guide', published: true },
 ];
